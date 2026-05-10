@@ -1,0 +1,86 @@
+
+services:
+  # Redis Cache & Queue (Required for BullMQ)
+  redis:
+    image: redis:7-alpine
+    container_name: code-break-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory-policy noeviction
+    volumes:
+      - redis_data:/data
+    networks:
+      - code-break-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend Server (API)
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: code-break-server
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./server/.env
+    environment:
+      # Override Redis host to use container name (not localhost)
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - code-break-network
+    volumes:
+      - ./server/logs:/app/logs
+
+  # Bull Queue Worker
+  worker:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: code-break-worker
+    restart: unless-stopped
+    env_file:
+      - ./server/.env
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    command: npm run worker
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - code-break-network
+    volumes:
+      - ./server/logs:/app/logs
+
+  # Frontend Client (React + Vite)
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: code-break-client
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./client/.env
+    depends_on:
+      - server
+    networks:
+      - code-break-network
+
+networks:
+  code-break-network:
+    driver: bridge
+
+volumes:
+  redis_data:
