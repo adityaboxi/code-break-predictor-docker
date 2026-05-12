@@ -1,332 +1,256 @@
-# 🔮 Code Break Predictor
+# 🚀 Code Break Predictor — Beginner Setup Guide
 
-> Predict code breakage before it happens — powered by Docker & SendGrid.
-
----
-
-## 📋 Table of Contents
-
-- [Prerequisites](#-prerequisites)
-- [Step 1 — Install Docker](#-step-1--install-docker)
-- [Step 2 — Clone the Repository](#-step-2--clone-the-repository)
-- [Step 3 — Configure SendGrid Email](#-step-3--configure-sendgrid-email)
-- [Step 4 — Run the Application](#-step-4--run-the-application)
-- [Step 5 — Open in Browser](#-step-5--open-in-browser)
-- [Ecosystem Support](#-ecosystem-support)
-- [Troubleshooting](#-troubleshooting)
+Run the app on your laptop in under 10 minutes. No coding experience needed.
 
 ---
 
-## 🧰 Prerequisites
+## What You'll Need
 
-Before you begin, make sure your machine has one of the following package managers or runtimes installed (the app runs inside Docker, so only Docker itself is strictly required):
-
-| Ecosystem     | Tool            | Official Link |
-|---------------|-----------------|---------------|
-| **Docker**    | Docker Desktop  | [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop) |
-| Node.js / JS  | Node.js + npm   | [https://nodejs.org](https://nodejs.org) |
-| Node.js / JS  | Yarn            | [https://yarnpkg.com](https://yarnpkg.com) |
-| Node.js / JS  | pnpm            | [https://pnpm.io](https://pnpm.io) |
-| Python        | pip / pip3      | [https://pip.pypa.io](https://pip.pypa.io) |
-| Python        | Poetry          | [https://python-poetry.org](https://python-poetry.org) |
-| Java / JVM    | Maven           | [https://maven.apache.org](https://maven.apache.org) |
-| Java / JVM    | Gradle          | [https://gradle.org](https://gradle.org) |
-| Ruby          | Bundler / gem   | [https://bundler.io](https://bundler.io) |
-| PHP           | Composer        | [https://getcomposer.org](https://getcomposer.org) |
-| Go            | Go Modules      | [https://go.dev](https://go.dev) |
-| Rust          | Cargo           | [https://doc.rust-lang.org/cargo](https://doc.rust-lang.org/cargo) |
-| .NET / C#     | NuGet / dotnet  | [https://dotnet.microsoft.com](https://dotnet.microsoft.com) |
-| Swift         | Swift Package Manager | [https://swift.org/package-manager](https://swift.org/package-manager) |
-
-> **Note:** Docker wraps the entire application — you do **not** need to install any of the above to run the project. They are listed here for local development or if you choose to run services outside Docker.
+- A laptop running **Mac, Windows, or Linux**
+- An internet connection (to download Docker and the app)
+- A **SendGrid account** for email features (free tier works)
 
 ---
 
-## 🐳 Step 1 — Install Docker
+## Step 1 — Install Docker
 
-Docker is required to build and run the application containers.
+Docker is the only software you need to install. It runs the entire app for you.
 
-### Download Docker Desktop (GUI — Recommended)
+**Mac**
+1. Go to [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
+2. Download **Docker Desktop for Mac** and open the `.dmg` file
+3. Drag the Docker icon into your **Applications** folder
+4. Open Docker Desktop from Applications
+5. Wait until you see **"Docker is running"** in the menu bar
 
-| Platform | Download Link |
-|----------|--------------|
-| 🪟 Windows | [https://docs.docker.com/desktop/install/windows-install/](https://docs.docker.com/desktop/install/windows-install/) |
-| 🍎 macOS (Apple Silicon / Intel) | [https://docs.docker.com/desktop/install/mac-install/](https://docs.docker.com/desktop/install/mac-install/) |
-| 🐧 Linux | [https://docs.docker.com/desktop/install/linux-install/](https://docs.docker.com/desktop/install/linux-install/) |
+**Windows**
+1. Go to [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
+2. Download **Docker Desktop for Windows** and run the installer
+3. **Restart your computer** after installation
+4. Open Docker Desktop and wait for it to start
 
-### Install Docker Engine (CLI only — for Linux servers)
-
+**Linux (Ubuntu/Debian)**
 ```bash
-# Ubuntu / Debian
-sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
-
-# Fedora / RHEL / CentOS
-sudo dnf install docker-ce docker-ce-cli containerd.io docker-compose-plugin
-
-# Arch Linux
-sudo pacman -S docker docker-compose
+sudo apt update
+sudo apt install docker.io docker-compose
+sudo systemctl start docker
+sudo systemctl enable docker
 ```
 
-> 📖 Full engine install guide: [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/)
-
-### Verify Installation
-
-```bash
-docker --version
-docker compose version
-```
-
-> ⚠️ **Keep Docker Desktop open** (running in the background) before proceeding to the next steps.
+> ✅ **How to confirm Docker is working:** Open Terminal and run `docker --version`. You should see a version number like `Docker version 24.x.x`.
 
 ---
 
-## 📦 Step 2 — Clone the Repository
+## Step 2 — Get a SendGrid API Key (for emails)
 
-Choose the method that matches your environment:
+The app sends emails (e.g. password reset). SendGrid has a free plan.
 
-### Using Git (Recommended)
+1. Go to [https://sendgrid.com](https://sendgrid.com) and create a free account
+2. After logging in, go to **Settings → API Keys**
+3. Click **Create API Key** → give it any name → choose **Full Access**
+4. Copy the key — it starts with `SG.` — and save it somewhere safe (you won't see it again)
+5. Go to **Settings → Sender Authentication** and verify the email address you'll send from
 
-```bash
-# HTTPS
-git clone https://github.com/your-username/code-break-predictor.git
+---
 
-# SSH (if you have SSH keys configured)
-git clone git@github.com:your-username/code-break-predictor.git
+## Step 3 — Create Your Project Folder
 
-# GitHub CLI
-gh repo clone your-username/code-break-predictor
-```
-
-> 📖 Install Git: [https://git-scm.com/downloads](https://git-scm.com/downloads)  
-> 📖 Install GitHub CLI: [https://cli.github.com](https://cli.github.com)
-
-### Navigate into the project directory
+Open **Terminal** (Mac/Linux) or **Command Prompt** (Windows) and run these commands one by one:
 
 ```bash
-cd code-break-predictor
+# Go to your Desktop
+cd ~/Desktop
+
+# Create a new folder for the app
+mkdir code-break-app
+
+# Enter the folder
+cd code-break-app
 ```
 
 ---
 
-## 📧 Step 3 — Configure SendGrid Email
+## Step 4 — Create the Configuration File
 
-This project uses **SendGrid** as its SMTP email provider.
+This file tells Docker how to run the app. Copy the entire block below, **replace the 3 values** marked with `← CHANGE THIS`, then paste it into your terminal and press Enter.
 
-### 3a. Create a SendGrid Account
+```bash
+cat > docker-compose.yml << 'EOF'
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:7
+    container_name: code-break-mongodb
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app-network
 
-Go to: [https://sendgrid.com/en-us/free](https://sendgrid.com/en-us/free)
+  redis:
+    image: redis:7-alpine
+    container_name: code-break-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
 
-Sign up for a free account (100 emails/day free tier).
+  app:
+    image: adityaisme/code-break-predictor-docker:latest
+    container_name: code-break-predictor
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongodb:27017/code-break-predictor
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=your_super_secret_key_change_this
+      - JWT_EXPIRES_IN=7d
+      - ADMIN_EMAIL=admin@example.com
+      - ADMIN_PASSWORD=admin123
+      - CORS_ORIGIN=http://localhost:3000
+      - FRONTEND_URL=http://localhost:3000
+      - SMTP_HOST=smtp.sendgrid.net
+      - SMTP_PORT=587
+      - SMTP_USER=apikey
+      - SMTP_PASS=YOUR_SENDGRID_API_KEY        ← CHANGE THIS
+      - EMAIL_FROM="Code Break Predictor <your-verified-email@example.com>"  ← CHANGE THIS
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - app-network
 
-### 3b. Generate an API Key
+networks:
+  app-network:
+    driver: bridge
 
-1. Log in to [https://app.sendgrid.com](https://app.sendgrid.com)
-2. Navigate to **Settings → API Keys**
-3. Click **Create API Key**
-4. Choose **Full Access** (or **Restricted Access** with Mail Send enabled)
-5. Copy the generated key — it starts with `SG.`
-
-> 📖 Official guide: [https://docs.sendgrid.com/ui/account-and-settings/api-keys](https://docs.sendgrid.com/ui/account-and-settings/api-keys)
-
-### 3c. Update `docker-compose.yml`
-
-Open `docker-compose.yml` in your editor and replace the placeholder values:
-
-```yaml
-environment:
-  - SMTP_PASS=SG.your_sendgrid_api_key_here      # 👈 Replace with your actual API key
-  - EMAIL_FROM=Code Break Predictor <noreply@yourdomain.com>  # 👈 Replace with your sender email
+volumes:
+  mongodb_data:
+  redis_data:
+EOF
 ```
 
-**Example (after replacing):**
+> 💡 **What to replace:**
+> - `YOUR_SENDGRID_API_KEY` → your `SG.xxxxx` key from Step 2
+> - `your-verified-email@example.com` → the email you verified in SendGrid
 
-```yaml
-environment:
-  - SMTP_PASS=SG.aBcDeFgHiJkLmNoPqRsTuVwXyZ1234567890
-  - EMAIL_FROM=Code Break Predictor <noreply@mycompany.com>
+---
+
+## Step 5 — Download and Start the App
+
+Run these two commands:
+
+```bash
+# Download the app image
+docker pull adityaisme/code-break-predictor-docker:latest
+
+# Start everything
+docker-compose up -d
 ```
 
-> ⚠️ **Important:** Never commit your real API key to version control. Use a `.env` file and add it to `.gitignore` for production setups.
+The first time this runs, Docker will download MongoDB and Redis automatically. This may take 1–2 minutes depending on your internet speed.
 
-#### Recommended: Use a `.env` file instead
+---
 
-Create a `.env` file in the project root:
+## Step 6 — Confirm Everything is Running
 
-```env
-SMTP_PASS=SG.your_real_api_key_here
-EMAIL_FROM=Code Break Predictor <noreply@yourdomain.com>
+```bash
+docker-compose ps
 ```
 
-Then reference it in `docker-compose.yml`:
+You should see three containers all showing **Up**:
 
-```yaml
-environment:
-  - SMTP_PASS=${SMTP_PASS}
-  - EMAIL_FROM=${EMAIL_FROM}
+```
+NAME                   STATE    PORTS
+code-break-mongodb     Up       27017/tcp
+code-break-redis       Up       6379/tcp
+code-break-predictor   Up       0.0.0.0:3000->3000/tcp
+```
+
+You can also do a quick health check:
+
+```bash
+curl http://localhost:3000/health
+```
+
+Expected response:
+```json
+{"status":"ok","timestamp":"...","uptime":"..."}
 ```
 
 ---
 
-## 🚀 Step 4 — Run the Application
+## Step 7 — Open the App
 
-Make sure Docker Desktop is **open and running**, then execute:
+1. Open any browser (Chrome, Firefox, Safari)
+2. Go to: **[http://localhost:3000](http://localhost:3000)**
+3. Click **Register** to create your account
+4. Log in and start using the app 🎉
+
+---
+
+## Daily Use — Starting and Stopping
+
+| What you want to do | Command |
+|---|---|
+| Start the app | `docker-compose up -d` |
+| Stop the app (keeps your data) | `docker-compose down` |
+| Restart the app | `docker-compose restart` |
+| View live logs | `docker-compose logs -f` |
+| Wipe everything and start fresh | `docker-compose down -v` |
+
+> Always run these commands from inside the `code-break-app` folder on your Desktop.
+
+---
+
+## Troubleshooting
+
+**"Port 3000 already in use" error**
+
+Something else on your laptop is using port 3000. Open `docker-compose.yml`, find `"3000:3000"` and change it to `"3001:3000"`, then restart:
 
 ```bash
-docker compose up -d --build
+docker-compose down
+docker-compose up -d
 ```
 
-| Flag | Meaning |
-|------|---------|
-| `up` | Start all services defined in `docker-compose.yml` |
-| `-d` | Detached mode — runs containers in the background |
-| `--build` | Rebuild images before starting (picks up any code changes) |
+Now open the app at **http://localhost:3001** instead.
 
-### Useful Docker Commands
+**Containers won't start**
 
 ```bash
-# View running containers
-docker compose ps
+# See what went wrong
+docker-compose logs
 
-# View live logs
-docker compose logs -f
+# Make sure Docker Desktop is open and running
+docker ps
+```
 
-# View logs for a specific service
-docker compose logs -f app
+**Forgot to change the SendGrid key**
 
-# Stop all containers
-docker compose down
+Open `docker-compose.yml` in any text editor, update the `SMTP_PASS` and `EMAIL_FROM` lines, save the file, then run:
 
-# Stop and remove volumes (full reset)
-docker compose down -v
-
-# Rebuild without cache
-docker compose build --no-cache
+```bash
+docker-compose down
+docker-compose up -d
 ```
 
 ---
 
-## 🌐 Step 5 — Open in Browser
+## File Locations
 
-Once the containers are up and healthy, open your browser and navigate to:
-
-```
-http://localhost:3000/login
-```
-
-> If port `3000` is already in use on your machine, update the port mapping in `docker-compose.yml`:
-> ```yaml
-> ports:
->   - "3001:3000"   # Change 3001 to any free port
-> ```
-> Then access via `http://localhost:3001/login`
+| Item | Location |
+|---|---|
+| Configuration file | `~/Desktop/code-break-app/docker-compose.yml` |
+| App in browser | http://localhost:3000 |
+| All app data | Stored inside Docker volumes (managed automatically) |
 
 ---
 
-## 🌍 Ecosystem Support
-
-This project is containerized with Docker, meaning it runs identically regardless of your local development ecosystem. Below is a reference for developers who want to work on the source code locally (outside Docker):
-
-### JavaScript / TypeScript
-
-```bash
-npm install && npm run dev        # npm
-yarn install && yarn dev          # Yarn
-pnpm install && pnpm dev          # pnpm
-bun install && bun dev            # Bun — https://bun.sh
-```
-
-### Python
-
-```bash
-pip install -r requirements.txt   # pip
-poetry install && poetry run dev  # Poetry
-pipenv install && pipenv run dev  # Pipenv — https://pipenv.pypa.io
-```
-
-### Java / Kotlin
-
-```bash
-./mvnw spring-boot:run            # Maven Wrapper
-./gradlew bootRun                 # Gradle Wrapper
-```
-
-### Ruby
-
-```bash
-bundle install
-bundle exec rails server          # Rails
-bundle exec rackup                # Rack / Sinatra
-```
-
-### PHP
-
-```bash
-composer install
-php -S localhost:3000 -t public   # Built-in server
-```
-
-### Go
-
-```bash
-go mod download
-go run ./cmd/server               # Standard Go
-```
-
-### Rust
-
-```bash
-cargo build
-cargo run
-```
-
-### .NET / C#
-
-```bash
-dotnet restore
-dotnet run
-```
-
-### Swift
-
-```bash
-swift package resolve
-swift run
-```
-
----
-
-## 🔧 Troubleshooting
-
-| Problem | Solution |
-|---------|----------|
-| `docker: command not found` | Install Docker and ensure it's in your PATH |
-| `Cannot connect to the Docker daemon` | Open Docker Desktop and wait for it to fully start |
-| `Port 3000 already in use` | Change the host port in `docker-compose.yml` |
-| `SMTP authentication failed` | Double-check your SendGrid API key in `docker-compose.yml` or `.env` |
-| Containers exit immediately | Run `docker compose logs` to see the error output |
-| `permission denied` on Linux | Add your user to the docker group: `sudo usermod -aG docker $USER` then log out/in |
-
----
-
-## 📚 Official Documentation Links
-
-- 🐳 Docker Desktop: [https://docs.docker.com/desktop/](https://docs.docker.com/desktop/)
-- 🐳 Docker Compose: [https://docs.docker.com/compose/](https://docs.docker.com/compose/)
-- 📧 SendGrid: [https://docs.sendgrid.com](https://docs.sendgrid.com)
-- 📧 SendGrid API Keys: [https://docs.sendgrid.com/ui/account-and-settings/api-keys](https://docs.sendgrid.com/ui/account-and-settings/api-keys)
-- 🔗 Git: [https://git-scm.com/doc](https://git-scm.com/doc)
-- 🔗 GitHub CLI: [https://cli.github.com/manual/](https://cli.github.com/manual/)
-
----
-
-## 🔐 Security Best Practices
-
-- Never hardcode API keys in source files — use environment variables
-- Add `.env` to your `.gitignore`
-- Rotate SendGrid API keys periodically
-- Use SendGrid's **Restricted Access** keys with only `Mail Send` permission for production
-
----
-
-<p align="center">Made with ❤️ — Happy Predicting! 🔮</p>
+*Built with Docker · MongoDB · Redis · Node.js*
