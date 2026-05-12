@@ -85,5 +85,5 @@
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/adityaboxi/code-break-predictor.git
-cd code-break-predictor
+git clone https://github.com/adityaboxi/code-break-predictor-docker.git
+cd code-break-predictor-docker
