@@ -1,26 +1,25 @@
 const mongoose = require('mongoose');
-require('dotenv').config();
 
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(process.env.MONGODB_URI, {
+        // Use environment variable, fallback to localhost
+        const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/code-break-predictor';
+        
+        console.log(`📡 Connecting to MongoDB at: ${mongoURI.replace(/\/\/.*@/, '//<credentials>@')}`);
+        
+        await mongoose.connect(mongoURI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-        });
-        console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-        
-        mongoose.connection.on('error', (err) => {
-            console.error('MongoDB connection error:', err);
+            serverSelectionTimeoutMS: 10000,
+            socketTimeoutMS: 45000,
         });
         
-        mongoose.connection.on('disconnected', () => {
-            console.warn('MongoDB disconnected');
-        });
-        
-        return conn;
+        console.log(`✅ MongoDB Connected: ${mongoose.connection.host}`);
+        console.log(`📊 Database: ${mongoose.connection.name}`);
     } catch (error) {
-        console.error('❌ MongoDB connection failed:', error.message);
-        process.exit(1);
+        console.error('❌ MongoDB Connection Error:', error.message);
+        // Retry connection after 5 seconds
+        setTimeout(connectDB, 5000);
     }
 };
 

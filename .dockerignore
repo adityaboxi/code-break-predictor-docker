@@ -7,12 +7,12 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
-# Environment files (contains secrets)
+# Environment files (we already set ENV in Dockerfile)
 .env
 .env.*
 !.env.example
 
-# Build outputs
+# Build outputs (will be rebuilt in container)
 dist/
 build/
 .next/
@@ -20,6 +20,13 @@ out/
 .cache/
 server/public/
 client/dist/
+
+# Git and documentation
+.git/
+.gitignore
+README.md
+LICENSE
+*.md
 
 # Logs
 logs/
@@ -50,12 +57,12 @@ Desktop.ini
 *.sw?
 
 # Testing
-coverage/
-.nyc_output/
 test/
 tests/
 __tests__/
 __mocks__/
+coverage/
+.nyc_output/
 jest.config.js
 vitest.config.js
 *.test.js
@@ -71,8 +78,7 @@ vitest.config.js
 *.sh
 *.ps1
 *.bat
-!run.sh
-!setup.sh
+!entrypoint.sh
 
 # Temporary files
 tmp/
@@ -81,10 +87,14 @@ temp/
 *.temp
 .cache/
 
-# Docker volumes data (local)
+# Docker files
+Dockerfile
+docker-compose.yml
+docker-compose.override.yml
+.dockerignore
+
+# MongoDB local data (if any)
 /data/
-mongodb_data/
-redis_data/
 *.rdb
 *.aof
 dump.rdb
@@ -92,7 +102,3 @@ dump.rdb
 # Misc
 *.bak
 *.backup
-
-# Ensure Dockerfile and .dockerignore are tracked (already not ignored)
-# Dockerfile
-# .dockerignore
