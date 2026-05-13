@@ -147,6 +147,9 @@ EOF
 Run these two commands:
 
 ```bash
+#open the docker app(manually/command)
+ open -a Docker
+
 # Download the app image
 docker pull adityaisme/code-break-predictor-docker:latest
 
