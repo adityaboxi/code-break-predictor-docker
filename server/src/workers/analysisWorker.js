@@ -10,7 +10,7 @@ const RiskEngine = require('../services/riskEngine.js');
 connectDB();
 console.log('🚀 Bull worker starting...');
 
-analysisQueue.process(async (job) => {
+analysisQueue.process(1,async (job) => {
     const { analysisId, userId, repoUrl, predictionDate, githubToken, startedAt } = job.data;
     console.log(`🔨 [Job ${job.id}] Starting analysis for ${repoUrl}`);
     await job.progress(10);
