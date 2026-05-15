@@ -10,7 +10,7 @@ const RiskEngine = require('../services/riskEngine.js');
 connectDB();
 console.log('🚀 Bull worker starting...');
 
-analysisQueue.process(1,async (job) => {
+analysisQueue.process(1, async (job) => {  
     const { analysisId, userId, repoUrl, predictionDate, githubToken, startedAt } = job.data;
     console.log(`🔨 [Job ${job.id}] Starting analysis for ${repoUrl}`);
     await job.progress(10);
@@ -41,7 +41,7 @@ analysisQueue.process(1,async (job) => {
                 currentVersion: dep.version,
                 latestVersion: riskResult.latestVersion,
                 filePath: dep.manifestPath,
-                dependencyType: dep.dependencyType || 'dependencies',  // Use the correct field
+                dependencyType: dep.dependencyType || 'dependencies',
                 ecosystem: dep.ecosystem,
                 deprecated: riskResult.deprecated,
                 riskPercentage: riskResult.riskPercentage,
@@ -89,6 +89,7 @@ analysisQueue.process(1,async (job) => {
 
         console.log(`✅ [Job ${job.id}] Completed! Risk: ${overallRisk}%`);
         return { analysisId, overallRisk, totalDependencies: totalDeps, highRiskCount, mediumRiskCount, lowRiskCount };
+
     } catch (error) {
         console.error(`❌ [Job ${job.id}] Failed:`, error.message);
         await Analysis.findByIdAndUpdate(analysisId, { status: 'failed', errorMessage: error.message });
