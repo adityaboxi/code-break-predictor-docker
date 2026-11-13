@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "worker": "node src/workers/analysisWorker.js"
+    "worker": "node src/workers/analysisWorker.js",
+    "lint": "eslint ./src --ext .js,.jsx",
+    "lint:fix": "eslint ./src --ext .js,.jsx --fix"
   },
   "dependencies": {
     "axios": "^1.6.2",

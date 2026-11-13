@@ -67,21 +67,24 @@ app.get('/health', (req, res) => {
 app.use(express.static(path.join(__dirname, '../public')));
 
 // Create admin user if not exists
+const bcrypt = require('bcryptjs');
 const createAdminUser = async () => {
     try {
         const adminExists = await User.findOne({ role: 'admin' });
         if (!adminExists) {
+            const rawPassword = process.env.ADMIN_PASSWORD || 'admin123';
+            const hashedPassword = await bcrypt.hash(rawPassword, 10);
             await User.create({
                 email: process.env.ADMIN_EMAIL || 'admin@example.com',
                 username: 'admin',
-                passwordHash: process.env.ADMIN_PASSWORD || 'admin123',
+                passwordHash: hashedPassword,
                 role: 'admin',
                 monthlyAnalysisLimit: 1000
             });
             console.log('✅ Admin user created');
         }
     } catch (error) {
-        console.log('Admin user already exists or creation failed');
+        console.error('Admin user creation failed:', error);
     }
 };
 
